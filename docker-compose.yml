@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  django:
+    container_name: django_server
+    build:
+      context: .
+      dockerfile: ./docker_compose/docker/Dockerfile
+    # command: /start.sh
+    ports:
+      - 8000:8000
+    command: gunicorn -w 4 quiz.wsgi -b 0.0.0.0:8000
+
+  nginx:
+    container_name: nginx_server
+    build:
+      context: .
+      dockerfile: ./docker_compose/nginx/Dockerfile
+    depends_on:
+      - django
+    ports:
+      - 80:80
